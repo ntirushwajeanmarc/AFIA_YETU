@@ -188,7 +188,7 @@ class _PharmacyScreenState extends State<PharmacyScreen> {
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 0.75,
+        childAspectRatio: 0.8,
       ),
       itemCount: _filteredMedications.length,
       itemBuilder: (context, index) {
@@ -234,72 +234,68 @@ class _PharmacyScreenState extends State<PharmacyScreen> {
                 ),
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      medication['name'],
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    medication['name'],
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '\$${medication['price'].toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFFF9800),
-                      ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '\$${medication['price'].toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFF9800),
                     ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        if (medication['prescription'])
-                          const Icon(
-                            Icons.receipt,
-                            size: 12,
-                            color: Colors.red,
-                          ),
-                        if (medication['prescription'])
-                          const SizedBox(width: 4),
-                        if (medication['prescription'])
-                          const Text(
-                            'Rx',
-                            style: TextStyle(fontSize: 10, color: Colors.red),
-                          ),
-                        const Spacer(),
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: medication['inStock']
-                                ? Colors.green
-                                : Colors.red,
-                            shape: BoxShape.circle,
-                          ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      if (medication['prescription']) ...[
+                        const Icon(Icons.receipt, size: 10, color: Colors.red),
+                        const SizedBox(width: 2),
+                        const Text(
+                          'Rx',
+                          style: TextStyle(fontSize: 9, color: Colors.red),
                         ),
-                        const SizedBox(width: 4),
-                        Text(
+                        const SizedBox(width: 8),
+                      ],
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: medication['inStock']
+                              ? Colors.green
+                              : Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 3),
+                      Expanded(
+                        child: Text(
                           medication['inStock'] ? 'In Stock' : 'Out of Stock',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 9,
                             color: medication['inStock']
                                 ? Colors.green
                                 : Colors.red,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
