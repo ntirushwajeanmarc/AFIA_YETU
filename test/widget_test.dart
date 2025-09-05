@@ -7,13 +7,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:amed/main.dart';
+import 'package:amed/core/providers/locale_provider.dart';
+import 'package:amed/core/services/auth_service.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(
+      MyApp(localeProvider: LocaleProvider(), authService: AuthService()),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

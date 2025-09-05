@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:amed/core/services/auth_service.dart';
+import 'package:amed/core/localization/app_localizations.dart';
+import 'package:amed/core/providers/locale_provider.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -28,12 +31,14 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Account',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          localizations.account,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF9C27B0),
         foregroundColor: Colors.white,
@@ -105,7 +110,7 @@ class _AccountScreenState extends State<AccountScreen> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Premium Member',
+              AppLocalizations.of(context)!.premiumMember,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.9),
                 fontWeight: FontWeight.w500,
@@ -118,57 +123,65 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildMenuItems(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          _buildMenuSection('Health', [
+          _buildMenuSection(localizations.health, [
             _buildMenuItem(
               Icons.favorite,
-              'Health Records',
-              'View your medical history',
+              localizations.healthRecords,
+              localizations.viewMedicalHistory,
               () => _showComingSoon(context),
             ),
             _buildMenuItem(
               Icons.healing,
-              'Medications',
-              'Manage your prescriptions',
+              localizations.medications,
+              localizations.managePrescriptions,
               () => _showComingSoon(context),
             ),
           ]),
           const SizedBox(height: 20),
-          _buildMenuSection('Settings', [
+          _buildMenuSection(localizations.settings, [
             _buildMenuItem(
               Icons.notifications,
-              'Notifications',
-              'Manage your alerts',
+              localizations.notifications,
+              localizations.manageAlerts,
               () => _showComingSoon(context),
             ),
             _buildMenuItem(
               Icons.security,
-              'Privacy & Security',
-              'Manage your privacy settings',
+              localizations.privacySecurity,
+              localizations.managePrivacy,
               () => _showComingSoon(context),
             ),
-            _buildMenuItem(
-              Icons.language,
-              'Language',
-              'English',
-              () => _showLanguageDialog(context),
+            Consumer<LocaleProvider>(
+              builder: (context, localeProvider, child) {
+                return _buildMenuItem(
+                  Icons.language,
+                  localizations.language,
+                  localeProvider.isEnglish
+                      ? localizations.english
+                      : localizations.french,
+                  () => _showLanguageDialog(context),
+                );
+              },
             ),
           ]),
           const SizedBox(height: 20),
-          _buildMenuSection('Support', [
+          _buildMenuSection(localizations.support, [
             _buildMenuItem(
               Icons.help,
-              'Help & Support',
-              'Get help with the app',
+              localizations.helpSupport,
+              localizations.getHelp,
               () => _showComingSoon(context),
             ),
             _buildMenuItem(
               Icons.info,
-              'About',
-              'App version and info',
+              localizations.about,
+              localizations.appVersionInfo,
               () => _showComingSoon(context),
             ),
           ]),
@@ -246,6 +259,8 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildLogoutButton() {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -262,26 +277,26 @@ class _AccountScreenState extends State<AccountScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text(
-          'Logout',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        child: Text(
+          localizations.logout,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 
   void _showComingSoon(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Coming Soon'),
-        content: const Text(
-          'This feature is currently under development and will be available in a future update.',
-        ),
+        title: Text(localizations.comingSoon),
+        content: Text(localizations.featureInDevelopment),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: Text(localizations.ok),
           ),
         ],
       ),
@@ -289,23 +304,32 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   void _showLanguageDialog(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Language'),
+        title: Text(localizations.selectLanguage),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: const Text('English'),
-              leading: const Icon(Icons.check),
-              onTap: () => Navigator.pop(context),
+              title: Text(localizations.english),
+              leading: localeProvider.isEnglish
+                  ? const Icon(Icons.check)
+                  : null,
+              onTap: () {
+                localeProvider.setLocale(const Locale('en', ''));
+                Navigator.pop(context);
+              },
             ),
             ListTile(
-              title: const Text('Français'),
+              title: Text(localizations.french),
+              leading: localeProvider.isFrench ? const Icon(Icons.check) : null,
               onTap: () {
+                localeProvider.setLocale(const Locale('fr', ''));
                 Navigator.pop(context);
-                _showComingSoon(context);
               },
             ),
           ],
@@ -315,15 +339,17 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   void _showSettingsDialog(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Settings'),
+        title: Text(localizations.settings),
         content: const Text('Advanced settings will be available here.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(localizations.close),
           ),
         ],
       ),

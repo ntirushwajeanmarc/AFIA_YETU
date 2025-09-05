@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:amed/core/localization/app_localizations.dart';
 import 'package:amed/features/appointments/presentation/screens/appointments_screen.dart';
 import 'package:amed/features/pharmacy/presentation/screens/pharmacy_screen.dart';
 import 'package:amed/features/messages/presentation/screens/messages_screen.dart';
@@ -38,45 +39,51 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4A90E2), Color(0xFF357ABD)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: const Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.person, size: 35, color: Color(0xFF4A90E2)),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome back!',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                Text(
-                  'How are you feeling today?',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+    return Builder(
+      builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
+
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF4A90E2), Color(0xFF357ABD)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
-      ),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, size: 35, color: Color(0xFF4A90E2)),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Welcome back!',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    Text(
+                      localizations.welcomeMessage,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
